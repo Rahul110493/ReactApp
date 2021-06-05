@@ -1,5 +1,6 @@
 # Radix Simple React
 
+
 Sample react.js application for the Omnia Radix platform.
 
 ## Getting Started
