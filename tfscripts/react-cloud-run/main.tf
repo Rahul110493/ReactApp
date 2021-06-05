@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     google = {
-      source = "hashicorp/google-beta"
+      source = "hashicorp/google"
       version = "3.5.0"
     }
   }
@@ -21,7 +21,7 @@ resource "google_cloud_run_service" "default" {
         image = "${var.docker_image}"
         env {
           name = "PORT"
-          value = 80
+          value = "80"
         }
       }
     }
