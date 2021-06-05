@@ -6,6 +6,7 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_ID }}
+  SA: ${{ secrets.SERVICE_ACCOUNT}}
   RUN_REGION: europe-west1
   REPO_NAME: react
 
@@ -43,17 +44,22 @@ jobs:
 
     - name: Terraform init
       id: init
-      run: terraform init -reconfigure
+      run: terraform init 
       continue-on-error: false
       working-directory: ./tfscripts/react-cloud-run
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
     - name: Terraform Plan
       id: plan
       run: terraform plan
       continue-on-error: false
       working-directory: ./tfscripts/react-cloud-run  
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
     - name: Terraform apply
       id: apply
       run: terraform apply -var="docker-image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
       continue-on-error: false
       working-directory: ./tfscripts/react-cloud-run
- 
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SA }}
