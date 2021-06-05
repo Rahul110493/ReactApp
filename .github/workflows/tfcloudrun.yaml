@@ -7,7 +7,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_ID }}
   RUN_REGION: europe-west1
-  repo-name: react
+  REPO_NAME: react
 
 jobs:
   setup-build-deploy-cloudrun:
