@@ -58,7 +58,7 @@ jobs:
         GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
     - name: Terraform apply
       id: apply
-      run: terraform apply -var="docker-image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
+      run: terraform apply -var="docker_image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
       continue-on-error: false
       working-directory: ./tfscripts/react-cloud-run
       env:
