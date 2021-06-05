@@ -19,6 +19,7 @@ resource "google_cloud_run_service" "default" {
     spec {
       containers {
         image = "${var.docker_image}"
+        container_port= "80"
       }
     }
   }
