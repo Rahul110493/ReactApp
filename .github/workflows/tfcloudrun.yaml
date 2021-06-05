@@ -2,18 +2,12 @@ name: Provisioning infrastructure for CloudRun
 on: 
   push:
     branches:
-      - feature-gcr
-#   pull_request:
-#    branches-ignore:
-#       - stage
-#       - test
-#       - master
-#       - prod  
+      - develop
 
 env:
-  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_ID }}
   RUN_REGION: europe-west1
-  DOCKER_IMAGE: gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA
+  repo-name: react
 
 jobs:
   setup-build-deploy-cloudrun:
@@ -28,53 +22,38 @@ jobs:
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
         version: '290.0.1'
-        service_account_key: ${{ secrets.GCP_GKE_TF_SA_KEY}}
+        service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
         export_default_credentials: true
-        project_id: ${{ secrets.GCP_PROJECT_ID }}   
+        project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}   
     - name: Enable docker auth
       run: |-     
         gcloud --quiet auth configure-docker
         
     - name: Build and tag image
       run: |-
-        docker build . --tag $DOCKER_IMAGE
+        docker build . --tag gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA
         
     - name: Push image to GCR
       run: |-
-        docker push $DOCKER_IMAGE          
+        docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA        
   
     # Terraform remote state GCS
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
-    # Terraform script checkout 
-    - name: Terraform repository checkout 
-      uses: actions/checkout@v2
-      with:
-        repository: ingka-group-digital/cweb-mgmt-pilot-project/
-        ref: dev
-        path: cweb-mgmt-pilot-project
-        ssh-key: ${{ secrets.CWEB_MGMT_PILOT_SSH }}
-        ssh-strict: false
-
     - name: Terraform init
       id: init
       run: terraform init
       continue-on-error: false
-      working-directory: ./cweb-mgmt-pilot-project/tf-scripts/cweb-pilot-project/cloud-run
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      working-directory: ./tfscripts/react-cloud-run
     - name: Terraform Plan
       id: plan
       run: terraform plan
       continue-on-error: false
-      working-directory: ./cweb-mgmt-pilot-project/tf-scripts/cweb-pilot-project/cloud-run
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}   
+      working-directory: ./tfscripts/react-cloud-run  
     - name: Terraform apply
       id: apply
-      run: terraform apply -var="docker-image=$DOCKER_IMAGE" -auto-approve 
+      run: terraform apply -var="docker-image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
       continue-on-error: false
-      working-directory: ./cweb-mgmt-pilot-project/tf-scripts/cweb-pilot-project/cloud-run
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS}} 
+      working-directory: ./tfscripts/react-cloud-run
+ 
