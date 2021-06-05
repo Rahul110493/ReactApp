@@ -1,6 +1,7 @@
 provider "google" {
-  version = "3.70.0"
+  version = "~> 2.8"
   project = "${var.project_id}"
+  region  = "${var.region}"
 }
 
 resource "google_cloud_run_service" "default" {
