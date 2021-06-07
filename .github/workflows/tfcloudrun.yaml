@@ -26,13 +26,13 @@ jobs:
         service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
         export_default_credentials: true
         project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}  
-    - uses: actions-hub/gcloud@master
-      env:
-        PROJECT_ID: nodejsapp-314207
-        APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-      with:
-        args: version
-        cli: gsutil        
+#     - uses: actions-hub/gcloud@master
+#       env:
+#         PROJECT_ID: nodejsapp-314207
+#         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+#       with:
+#         args: version
+#         cli: gsutil        
     - name: Create tf state bucket    
       run: |-
         if ! gsutil ls | grep gs://devbucket11 ;then gsutil mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11;fi
