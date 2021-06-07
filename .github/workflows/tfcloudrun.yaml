@@ -36,8 +36,12 @@ jobs:
         
     - name: Push image to GCR
       run: |-
-        docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA        
-  
+        docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
+        
+    - name: Create tf state bucket    
+      run: |-
+        gsutil ls | grep gs://devbucket11
+        if [ "echo $?" != 0 ];then gsutil mb -p $PROJECT_ID -l $RUN_REGION -b on gs://devbucket11;fi
     # Terraform remote state GCS
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
