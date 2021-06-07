@@ -25,7 +25,13 @@ jobs:
         version: '290.0.1'
         service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
         export_default_credentials: true
-        project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}   
+        project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}  
+        
+    - name: Create tf state bucket    
+      run: |-
+        gsutil ls | grep gs://devbucket11
+        if [ "echo $?" != 0 ];then gsutil mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11;fi
+        
     - name: Enable docker auth
       run: |-     
         gcloud --quiet auth configure-docker
@@ -38,10 +44,7 @@ jobs:
       run: |-
         docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
         
-    - name: Create tf state bucket    
-      run: |-
-        gsutil ls | grep gs://devbucket11
-        if [ "echo $?" != 0 ];then gsutil mb -p $PROJECT_ID -l $RUN_REGION -b on gs://devbucket11;fi
+
     # Terraform remote state GCS
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
