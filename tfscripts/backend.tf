@@ -1,6 +1,6 @@
 terraform {
-backend "gcs"{
-bucket = "terraform1-state-1"
-prefix = "dev"
-}
+  backend "gcs"{
+     bucket = "terraform1-state-101"
+     prefix = "dev"
+   }
 }
