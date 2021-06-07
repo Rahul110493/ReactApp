@@ -32,14 +32,12 @@ jobs:
         PROJECT_ID: nodejsapp-314207
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       with:
-        args: mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11
+        args: version
         cli: gsutil        
-#     - name: Create tf state bucket    
-#       run: |-
-#         gsutil ls | grep gs://devbucket11
-#         if [ "echo $?" != 0 ];then gsutil mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11;fi
-#         env:
-#           GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}          
+    - name: Create tf state bucket    
+      run: |-
+        gsutil ls | grep gs://devbucket11
+          
         
 #     - name: Enable docker auth
 #       run: |-     
