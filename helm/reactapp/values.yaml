@@ -42,8 +42,9 @@ ingress:
     kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-  - www.react.com
-  path: /
+    - host: react.com 
+  paths: 
+    - path: /
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
