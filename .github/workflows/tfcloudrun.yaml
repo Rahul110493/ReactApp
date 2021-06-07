@@ -32,7 +32,7 @@ jobs:
         PROJECT_ID: nodejsapp-314207
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       with:
-        args: version
+        args: mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11
         cli: gsutil        
 #     - name: Create tf state bucket    
 #       run: |-
