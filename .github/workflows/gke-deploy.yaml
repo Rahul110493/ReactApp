@@ -50,4 +50,4 @@ jobs:
       run: |-
         gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region $RUN_REGION
         # install/upgrade helm chart
-        helm upgrade --install reactapp ./helm/ReactApp --set image.repository=gcr.io/$PROJECT_ID/$REPO_NAME --set image.tag=$GITHUB_SHA        
+        helm upgrade --install reactapp ./helm/reactapp --set image.repository=gcr.io/$PROJECT_ID/$REPO_NAME --set image.tag=$GITHUB_SHA        
