@@ -48,6 +48,6 @@ jobs:
         ./get_helm.sh
     - name: Deploy to GKE Cluster
       run: |-
-        gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --zone $RUN_REGION-b
+        gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region $RUN_REGION
         # install/upgrade helm chart
         helm upgrade --install ReactApp ./helm/ReactApp --set image.repository=gcr.io/$PROJECT_ID/$REPO_NAME --set image.tag=$GITHUB_SHA        
