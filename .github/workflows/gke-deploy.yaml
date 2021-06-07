@@ -1,15 +1,16 @@
-name: Provisioning infrastructure for GKE
+name: Deploy for GKE
 on: 
   push:
     branches:
-      - feat
+      - develop
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
-  SA: ${{ secrets.GKE_SERVICE_ACCOUNT}}
+  SA: ${{ secrets.GKE_SERVICE_ACCOUNT }}
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GKE_SERVICE_ACCOUNT }}   
   RUN_REGION: europe-west1
   REPO_NAME: react
+  CLUSTER_NAME: my-cluster-1
 
 jobs:
   setup-build-deploy-cloudrun:
@@ -40,29 +41,13 @@ jobs:
       run: |-
         docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
         
-
-    # Terraform remote state GCS
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-
-    - name: Terraform init
-      id: init
-      run: terraform init 
-      continue-on-error: false
-      working-directory: ./tfscripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
-    - name: Terraform Plan
-      id: plan
-      run: terraform plan
-      continue-on-error: false
-      working-directory: ./tfscripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
-    - name: Terraform apply
-      id: apply
-      run: terraform apply -auto-approve 
-      continue-on-error: false
-      working-directory: ./tfscripts
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.SA }}
+    - name: Install helm
+      run: |
+        curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+        chmod 700 get_helm.sh
+        ./get_helm.sh
+    - name: Deploy to GKE Cluster
+      run: |-
+        gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --zone $RUN_REGION-b
+        # install/upgrade helm chart
+        helm upgrade --install ReactApp ./helm/ReactApp --set image.repository=gcr.io/$PROJECT_ID/$REPO_NAME --set image.tag=$GITHUB_SHA        
