@@ -20,13 +20,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     
-    # Setup gcloud CLI  
-#     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-#       with:
-#         version: '290.0.1'
-#         service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
-#         export_default_credentials: true
-#         project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}  
+    Setup gcloud CLI  
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
+        export_default_credentials: true
+        project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}  
     - uses: actions-hub/gcloud@master
       env:
         PROJECT_ID: nodejsapp-314207
