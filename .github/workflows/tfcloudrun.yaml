@@ -21,18 +21,18 @@ jobs:
       uses: actions/checkout@v1
     
     # Setup gcloud CLI  
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-      with:
-        version: '290.0.1'
-        service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
-        export_default_credentials: true
-        project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}  
+#     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+#       with:
+#         version: '290.0.1'
+#         service_account_key: ${{ secrets.SERVICE_ACCOUNT}}
+#         export_default_credentials: true
+#         project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}  
     - uses: actions-hub/gcloud@master
       env:
         PROJECT_ID: nodejsapp-314207
         APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
       with:
-        args: ls | grep gs://devbucket11
+        args: version
         cli: gsutil        
 #     - name: Create tf state bucket    
 #       run: |-
