@@ -46,6 +46,11 @@ jobs:
         curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
         chmod 700 get_helm.sh
         ./get_helm.sh
+    - name: Deploy Ingress Controller
+      run: |
+         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+         helm repo update
+         helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
     - name: Deploy to GKE Cluster
       run: |-
         gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region $RUN_REGION
