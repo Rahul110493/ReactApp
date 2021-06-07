@@ -35,20 +35,20 @@ jobs:
       id: init
       run: terraform init
       continue-on-error: false
-      working-directory: ./tf-scripts
+      working-directory: ./tfscripts
       env:
         GOOGLE_CREDENTIALS: ${{ env.SA }}
     - name: Terraform Plan
       id: plan
       run: terraform plan
       continue-on-error: false
-      working-directory: ./tf-scripts
+      working-directory: ./tfscripts
       env:
         GOOGLE_CREDENTIALS: ${{ env.SA }}   
     - name: Terraform apply
       id: apply
       run: terraform apply -auto-approve
       continue-on-error: false
-      working-directory: ./tf-scripts
+      working-directory: ./tfscripts
       env:
         GOOGLE_CREDENTIALS: ${{ env.SA}} 
