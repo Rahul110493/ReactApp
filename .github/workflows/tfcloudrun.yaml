@@ -31,45 +31,45 @@ jobs:
     - name: Create tf state bucket    
       run: |-
         gsutil ls | grep gs://devbucket11
-        if [ "echo $?" != 0 ];then gsutil mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11;fi
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}          
+#         if [ "echo $?" != 0 ];then gsutil mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11;fi
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}          
         
-    - name: Enable docker auth
-      run: |-     
-        gcloud --quiet auth configure-docker
+#     - name: Enable docker auth
+#       run: |-     
+#         gcloud --quiet auth configure-docker
         
-    - name: Build and tag image
-      run: |-
-        docker build . --tag "gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA"
+#     - name: Build and tag image
+#       run: |-
+#         docker build . --tag "gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA"
         
-    - name: Push image to GCR
-      run: |-
-        docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
+#     - name: Push image to GCR
+#       run: |-
+#         docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
         
 
-    # Terraform remote state GCS
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
+#     # Terraform remote state GCS
+#     - name: Setup Terraform
+#       uses: hashicorp/setup-terraform@v1
 
-    - name: Terraform init
-      id: init
-      run: terraform init 
-      continue-on-error: false
-      working-directory: ./tfscripts/react-cloud-run
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
-    - name: Terraform Plan
-      id: plan
-      run: terraform plan
-      continue-on-error: false
-      working-directory: ./tfscripts/react-cloud-run  
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
-    - name: Terraform apply
-      id: apply
-      run: terraform apply -var="docker_image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
-      continue-on-error: false
-      working-directory: ./tfscripts/react-cloud-run
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.SA }}
+#     - name: Terraform init
+#       id: init
+#       run: terraform init 
+#       continue-on-error: false
+#       working-directory: ./tfscripts/react-cloud-run
+#       env:
+#         GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
+#     - name: Terraform Plan
+#       id: plan
+#       run: terraform plan
+#       continue-on-error: false
+#       working-directory: ./tfscripts/react-cloud-run  
+#       env:
+#         GOOGLE_CREDENTIALS: ${{ secrets.SA }}      
+#     - name: Terraform apply
+#       id: apply
+#       run: terraform apply -var="docker_image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
+#       continue-on-error: false
+#       working-directory: ./tfscripts/react-cloud-run
+#       env:
+#         GOOGLE_CREDENTIALS: ${{ secrets.SA }}
