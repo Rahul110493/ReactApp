@@ -7,7 +7,8 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
-  SA: ${{ secrets.GKE_SERVICE_ACCOUNT}}
+  SA: ${{ secrets.GKE_SERVICE_ACCOUNT }}
+  CRED: ${{ secrets.GKE_GOOGLE_CRED }}
   RUN_REGION: europe-west1
 
 jobs:
@@ -37,18 +38,18 @@ jobs:
       continue-on-error: false
       working-directory: ./tfscripts
       env:
-        GOOGLE_CREDENTIALS: ${{ env.SA }}
+        GOOGLE_CREDENTIALS: ${{ env.CRED }}
     - name: Terraform Plan
       id: plan
       run: terraform plan
       continue-on-error: false
       working-directory: ./tfscripts
       env:
-        GOOGLE_CREDENTIALS: ${{ env.SA }}   
+        GOOGLE_CREDENTIALS: ${{ env.CRED }}   
     - name: Terraform apply
       id: apply
       run: terraform apply -auto-approve
       continue-on-error: false
       working-directory: ./tfscripts
       env:
-        GOOGLE_CREDENTIALS: ${{ env.SA}} 
+        GOOGLE_CREDENTIALS: ${{ env.CRED}} 
