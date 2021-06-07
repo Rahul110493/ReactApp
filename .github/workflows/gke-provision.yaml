@@ -24,7 +24,7 @@ jobs:
       with:
         version: '290.0.1'
         service_account_key: ${{ env.SA}}
-        export_default_credentials: true
+        export_default_credentials: false
         project_id: ${{ secrets.PROJECT_ID }}
   
     # Terraform remote state GCS
