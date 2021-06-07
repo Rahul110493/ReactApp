@@ -1,1 +1,68 @@
+name: Provisioning infrastructure for GKE
+on: 
+  push:
+    branches:
+      - feat
 
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
+  SA: ${{ secrets.GKE_SERVICE_ACCOUNT}}
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GKE_GOOGLE_APPLICATION_CREDENTIALS }}   
+  RUN_REGION: europe-west1
+  REPO_NAME: react
+
+jobs:
+  setup-build-deploy-cloudrun:
+    name: "Setup, Build, and Deploy CloudRun- '${{github.ref}}'"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.GKE_SERVICE_ACCOUNT}}
+        export_default_credentials: true
+        project_id: ${{ secrets.GKE_PROJECT_ID }}  
+
+        
+    - name: Enable docker auth
+      run: |-     
+        gcloud --quiet auth configure-docker
+        
+    - name: Build and tag image
+      run: |-
+        docker build . --tag "gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA"
+        
+    - name: Push image to GCR
+      run: |-
+        docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
+        
+
+    # Terraform remote state GCS
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform init
+      id: init
+      run: terraform init 
+      continue-on-error: false
+      working-directory: ./tfscripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GKE_SA }}      
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan
+      continue-on-error: false
+      working-directory: ./tfscripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GKE_SA }}      
+    - name: Terraform apply
+      id: apply
+      run: terraform apply -var="docker_image=gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA" -auto-approve 
+      continue-on-error: false
+      working-directory: ./tfscripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.SA }}
