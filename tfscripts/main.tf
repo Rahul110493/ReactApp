@@ -25,7 +25,11 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   location = "${var.container_node_pool_name_location_id}"
   cluster    = google_container_cluster.primary.name
   node_count = "${var.node_count}"
- 
+  
+  node_locations = [
+    "${var.container_node_pool_name_location_id}",
+  ]
+  
 node_config {
 
     # preemptible  = true 
