@@ -19,6 +19,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v1
+      
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      
     
     - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       with:
@@ -41,11 +45,6 @@ jobs:
       run: |-
         docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
         
-
-    # Terraform remote state GCS
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-
     - name: Terraform init
       id: init
       run: terraform init 
