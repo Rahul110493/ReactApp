@@ -1,3 +1,3 @@
 project_id = "nodejsapp-314207"
-region = "europe-west1"
+region = "asia-south1"
 docker_image = ""
