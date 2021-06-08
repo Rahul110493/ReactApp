@@ -25,7 +25,7 @@ jobs:
         version: '290.0.1'
         service_account_key: ${{ env.SA }}
         export_default_credentials: true
-        project_id: ${{ secrets.PROJECT_ID }}
+        project_id: ${{ secrets.GKE_PROJECT_ID }}
     - name: Create tf state bucket    
       run: |-
         if ! gsutil ls | grep gs://terraform1-state-101 ;then gsutil mb -p ${{ env.PROJECT_ID }} -l europe-west1 -b on gs://terraform1-state-101;fi  
