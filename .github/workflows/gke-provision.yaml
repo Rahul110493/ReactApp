@@ -26,7 +26,10 @@ jobs:
         service_account_key: ${{ env.SA }}
         export_default_credentials: true
         project_id: ${{ secrets.PROJECT_ID }}
-  
+    - name: Create tf state bucket    
+      run: |-
+        if ! gsutil ls | grep gs://terraform1-state-101 ;then gsutil mb -p $PROJECT_ID -l europe-west1 -b on gs://terraform1-state-101;fi  
+        
     # Terraform remote state GCS
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
