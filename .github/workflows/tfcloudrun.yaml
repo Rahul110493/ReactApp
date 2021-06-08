@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.CLOUD_RUN_PROJECT_ID }}
   SA: ${{ secrets.SERVICE_ACCOUNT}}
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}   
-  RUN_REGION: asia-south1
+  RUN_REGION: europe-west1
   REPO_NAME: react
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
         project_id: ${{ secrets.CLOUD_RUN_PROJECT_ID }}          
     - name: Create tf state bucket    
       run: |-
-        if ! gsutil ls | grep gs://devbucket11 ;then gsutil mb -p nodejsapp-314207 -l asia-south1 -b on gs://devbucket11;fi     
+        if ! gsutil ls | grep gs://devbucket11 ;then gsutil mb -p nodejsapp-314207 -l europe-west1 -b on gs://devbucket11;fi     
     - name: Enable docker auth
       run: |-     
         gcloud --quiet auth configure-docker
