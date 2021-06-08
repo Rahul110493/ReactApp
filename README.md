@@ -2,7 +2,6 @@
 Sample React.js application for the Docker environment.
 
 
-
 ## Getting Started
 ![Screen Shopt](images/screenshot.png?raw=true "Screen Shot")
 App with one container. Reading from external open API. No storage. No secrets. Dynamic web page - including information from external API.
