@@ -8,7 +8,7 @@ env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
   SA: ${{ secrets.GKE_SERVICE_ACCOUNT }}
   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GKE_SERVICE_ACCOUNT }}   
-  RUN_REGION: europe-west1
+  RUN_REGION: europe-west1-b
   REPO_NAME: react
   CLUSTER_NAME: my-cluster-1
 
