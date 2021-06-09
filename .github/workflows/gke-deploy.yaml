@@ -53,6 +53,7 @@ jobs:
 #          helm repo update
 #          helm upgrade --install nginx-ingress ingress-nginx/ingress-nginx --set controller.publishService.enabled=true
     - name: Deploy to GKE Cluster
-      run: |-   
+      run: |-       
+        gcloud container clusters get-credentials ${{ env.CLUSTER_NAME }} --region $RUN_REGION
         # install/upgrade helm chart
         helm upgrade --install reactapp ./helm/reactapp --set image.repository=gcr.io/$PROJECT_ID/$REPO_NAME --set image.tag=$GITHUB_SHA
