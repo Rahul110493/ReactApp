@@ -9,7 +9,6 @@ resource "google_container_cluster" "primary" {
  
   name  = "${var.cls_name}"
   location = "${var.cls_location_id}"
-
   remove_default_node_pool = "${var.remove_default_node_pool}"
   initial_node_count    = "${var.initial_node_count}"
   network    = google_compute_network.vpc.name
