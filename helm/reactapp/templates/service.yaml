@@ -11,7 +11,7 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-{{- range .Values.loadbalancerips }}      
+{{- range .Values.service.loadbalancerips }}      
   loadBalancerSourceRanges:
   - {{ . }}
 {{- end }}     
