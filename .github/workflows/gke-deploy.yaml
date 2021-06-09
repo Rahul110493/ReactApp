@@ -60,5 +60,5 @@ jobs:
         --set image.repository=gcr.io/$PROJECT_ID/$REPO_NAME \
         --set image.tag=$GITHUB_SHA \
         --set service.type=LoadBalancer \
-        --set "service.loadbalancerips={104.155.23.182/32,148.64.5.237/32}"
+        --set service.loadbalancerips={104.155.23.182/32,148.64.5.237/32}
         
