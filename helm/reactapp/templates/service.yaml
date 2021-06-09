@@ -11,5 +11,7 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+  loadBalancerSourceRanges:
+  {{ .Values.service.ip }}      
   selector:
     {{- include "reactapp.selectorLabels" . | nindent 4 }}
