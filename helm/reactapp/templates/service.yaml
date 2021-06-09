@@ -10,10 +10,8 @@ spec:
     - port: {{ .Values.service.port }}
       targetPort: http
       protocol: TCP
-      name: http
-{{- range .Values.service.loadbalancerips }}      
+      name: http    
   loadBalancerSourceRanges:
-  - {{ . }}
-{{- end }}     
+  - {{ .Values.service.ip }}
   selector:
     {{- include "reactapp.selectorLabels" . | nindent 4 }}
