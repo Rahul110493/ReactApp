@@ -65,5 +65,15 @@ variable "docker_repo" {
 variable "docker_tag" {
   description = "docker tag used"
   type        = string
-  default     = true
+  default     = ""
+}
+variable "machine_type" {
+  description = "machine type used"
+  type        = string
+  default     = ""
+}
+variable "preemptible" {
+  description = "preemptible type used"
+  type        = bool
+  default     = false
 }
