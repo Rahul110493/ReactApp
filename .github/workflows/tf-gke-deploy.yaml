@@ -41,7 +41,7 @@ jobs:
       run: |-
         docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
  
-     - name: Create tf state bucket    
+    - name: Create tf state bucket    
       run: |-
         if ! gsutil ls | grep gs://terraform1-state-101 ;then gsutil mb -p ${{ env.PROJECT_ID }} -l europe-west1 -b on gs://terraform1-state-101;fi  
         
