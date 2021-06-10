@@ -4,7 +4,10 @@ terraform {
       source  = "hashicorp/google"
       version = "3.5.0"
     }
-    helm = "~> 0.10"
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 1.2.0"
+    }
   }
 }
 
@@ -19,16 +22,17 @@ data "google_client_config" "default" {
 
 data "google_container_cluster" "default" {
   name = var.cls_name
+  location = var.cls_location_id
 }
 
 provider "helm" {
-  install_tiller  = true
-  service_account = "tiller"
-  namespace       = "kube-system"  
+#   install_tiller  = true
+#   service_account = "tiller"
+#   namespace       = "kube-system"  
   kubernetes {
     token                  = data.google_client_config.default.access_token
     host                   = data.google_container_cluster.default.endpoint
-#     cluster_ca_certificate = base64decode(data.google_container_cluster.default.master_auth[0].cluster_ca_certificate)
+    cluster_ca_certificate = base64decode(data.google_container_cluster.default.master_auth[0].cluster_ca_certificate)
   }
 }
 
