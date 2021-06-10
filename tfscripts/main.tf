@@ -42,6 +42,7 @@ resource "helm_release" "example" {
     name  = "image.tag"
     value = var.docker_tag
   }
+  depends_on = [google_container_node_pool.primary_preemptible_nodes]
 }
 
 resource "google_container_cluster" "primary" {
