@@ -1,0 +1,72 @@
+name: Deploy for GKE
+on: 
+  push:
+    branches:
+      - develop
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
+  SA: ${{ secrets.GKE_SERVICE_ACCOUNT }}
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GKE_SERVICE_ACCOUNT }}   
+  RUN_REGION: europe-west1-b
+  REPO_NAME: reactapp
+  CLUSTER_NAME: my-cluster-1
+
+jobs:
+  setup-build-deploy-cloudrun:
+    name: "Setup, Build, and Deploy CloudRun- '${{github.ref}}'"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    
+    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ env.SA }}
+        export_default_credentials: true
+        project_id: ${{ secrets.GKE_PROJECT_ID }}  
+
+        
+    - name: Enable docker auth
+      run: |-     
+        gcloud --quiet auth configure-docker
+        
+    - name: Build and tag image
+      run: |-
+        docker build . --tag "gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA"
+        
+    - name: Push image to GCR
+      run: |-
+        docker push gcr.io/$PROJECT_ID/$REPO_NAME:$GITHUB_SHA     
+ 
+     - name: Create tf state bucket    
+      run: |-
+        if ! gsutil ls | grep gs://terraform1-state-101 ;then gsutil mb -p ${{ env.PROJECT_ID }} -l europe-west1 -b on gs://terraform1-state-101;fi  
+        
+    # Terraform remote state GCS
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform init
+      id: init
+      run: terraform init
+      continue-on-error: false
+      working-directory: ./tfscripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ env.SA }}
+    - name: Terraform Plan
+      id: plan
+      run: terraform plan
+      continue-on-error: false
+      working-directory: ./tfscripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ env.SA }}   
+    - name: Terraform apply
+      id: apply
+      run: terraform apply -var="docker_repo=gcr.io/$PROJECT_ID/$REPO_NAME" -var="docker_tag=$GITHUB_SHA" -var="chart_name=reactapp" -auto-approve
+      continue-on-error: false
+      working-directory: ./tfscripts
+      env:
+        GOOGLE_CREDENTIALS: ${{ env.SA}} 
