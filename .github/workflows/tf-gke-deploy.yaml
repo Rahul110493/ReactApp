@@ -1,4 +1,4 @@
-name: Deploy for GKE
+name: Deploy for tf GKE
 on: 
   push:
     branches:
