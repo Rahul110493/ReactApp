@@ -1,8 +1,47 @@
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = "3.5.0"
+    }
+    helm = "~> 0.10"
+  }
+}
+
 provider "google" {
-  version = "3.5.0"
   project = "${var.project_id}"
   region  = "${var.region}"
   zone = "${var.zone}"
+}
+
+data "google_client_config" "default" {
+}
+
+data "google_container_cluster" "default" {
+  name = var.cls_name
+}
+
+provider "helm" {
+  kubernetes {
+    token                  = data.google_client_config.default.access_token
+    host                   = data.google_container_cluster.default.endpoint
+    cluster_ca_certificate = base64decode(data.google_container_cluster.default.master_auth[0].cluster_ca_certificate)
+  }
+}
+
+resource "helm_release" "example" {
+  name       = "${var.chart_name}" 
+  chart      = "./helm/${var.chart_name}"
+  
+  set {
+    name  = "image.repository"
+    value = ${var.docker_repo}"
+  }
+  
+  set {
+    name  = "image.tag"
+    value = ${var.docker_tag}"
+  }
 }
 
 resource "google_container_cluster" "primary" {
