@@ -10,3 +10,6 @@ container_node_pool_name_location_id = "europe-west1-b"
 node_count = 1
 preemptible = false
 machine_type = "e2-medium"
+chart_name=""
+docker_repo=""
+docker_tag=""
