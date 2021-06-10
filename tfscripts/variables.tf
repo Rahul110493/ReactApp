@@ -46,18 +46,24 @@ variable "container_node_pool_name_location_id" {
   default = ""
 }
 
+ variable "chart_name" {
+  description = "Chart name used "
+  type =string
+  default = ""
+ }
+
 variable "node_count" {
   description = "Number of nodes to create"
   type =number
   default = 1
 }
-variable "machine_type" {
-  description = "In the form of custom-CPUS-MEM, number of CPUs and memory for custom machine."
+variable "docker_repo" {
+  description = "docker repo used"
   type =string
   default = ""
 }
-variable "preemptible" {
-  description = "preemtibable"
-  type =bool
+variable "docker_tag" {
+  description = "docker tag used"
+  type =string
   default =true
 }
