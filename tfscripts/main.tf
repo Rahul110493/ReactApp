@@ -22,6 +22,9 @@ data "google_container_cluster" "default" {
 }
 
 provider "helm" {
+  install_tiller  = true
+  service_account = "tiller"
+  namespace       = "kube-system"  
   kubernetes {
     token                  = data.google_client_config.default.access_token
     host                   = data.google_container_cluster.default.endpoint
